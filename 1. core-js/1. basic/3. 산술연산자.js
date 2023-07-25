@@ -40,3 +40,7 @@ m++; // 1의 증가, 감소할 때 ++, --가 빠름
 // m+=1;
 
 console.log(`m : ${m}`);
+
+const str = 'hello' *5.5;
+console.log(`str:${str}`);
+
