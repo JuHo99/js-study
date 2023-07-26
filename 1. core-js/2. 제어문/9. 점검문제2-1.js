@@ -25,7 +25,12 @@ while (true) {
 alert(`1~100 사이의 숫자를 맞춰보세요`)
 for (let i = 0; i < tryNumber + 1; i++) {
   userNumber = +prompt(`${minNumber} ~ ${maxNumber} 사이에 숫자 입력 
-    ( 현재 남은 기회 : ${tryNumber - i})`)
+    ( 현재 남은 기회 : ${tryNumber - i})`) //user에게서 숫자를 받아 userNumber에 넣어준다
+  if(userNumber < minNumber || userNumber >maxNumber){
+    alert(`범위값 안의 값을 입력해주세요`);
+    i--;
+    continue;
+  }
   if (userNumber > randomNumber) {
     alert(`Down`);
     maxNumber = userNumber;
@@ -34,9 +39,12 @@ for (let i = 0; i < tryNumber + 1; i++) {
     minNumber = userNumber;
   } else if (userNumber === randomNumber) {
     alert(`Clear!
-        남은 기회 ${tryNumber - i}`);
+        시도한 횟수 ${i+1}`);
     break;
   }
+}
+if (userNumber !== randomNumber) {
+  alert(`You failure ranbumNumber = ${randomNumber}`);
 }
 
 
