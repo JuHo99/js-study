@@ -9,12 +9,12 @@
 # 출력 예시: 
 "키 -> 178.4cm, 체중-> 78.2kg의 체질량지수는: 24.57입니다"
 */
-function calcBMI(h,w) {
-    let bmi = w/(h/100*h/100);
+function calcBMI(h,w) { 
+    let bmi = w/(h/100*h/100); // bmi 구하는 공식
     if(bmi >25.0){
         console.log(`당신은 과체중입니다`);
         return bmi;
-    }else if(bmi <18.0){
+    }else if(bmi <18.5){
         console.log(`당신은 저체중입니다`);
         return bmi;
     }else{
@@ -26,6 +26,9 @@ function calcBMI(h,w) {
 // h와 w를 받아서 calcBMI함수를 호출해 BMI값을 저장해서 리턴해준다
 let h = 178.4,
   w = 78.2;
-let myBmi = calcBMI(h, w);
+let myBmi = calcBMI(h, w); // 저장된 h,w 변수의 값을 calcBMI 함수에 넣어줌
 
 console.log(`키 -> ${h}cm, 체중 -> ${w}kg의 체질량지수는 ${myBmi.toFixed(2)}입니다.`);
+//소수점 아래의 숫자를 정리해주는 .toFixed(2)를 사용해 소수점 2번째 자리까지만 나오게 표시
+
+
