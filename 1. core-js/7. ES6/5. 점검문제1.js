@@ -66,6 +66,7 @@ const traders = [
   }
 
   const ex1 = traders
+  .filter(trs => trs.year ===2022)
   .map(traderDate => {
     return{
         name : traderDate.trader.name,
@@ -80,6 +81,9 @@ const ex2 = traders
 .map(tradersCityAll => tradersCityAll.trader.city);
 
 console.log(ex2);
+const cities = [...new Set(ex2)];
+// Set으로 중복 제거( 집합개념 ) - 배열이 풀리기 때문에 수정이 안 됨
+console.log(cities);
 
 line();
 
@@ -100,17 +104,23 @@ line();
 
 let total = 0;
 
+// const ex5 = traders
+// .filter(tradersCity => tradersCity.trader.city ===`서울`)
+// .map(tradersValue => tradersValue.value)
+// .forEach(totalValue =>total += totalValue);
+
+// console.log(`서울의 거래 총 액 : ${total}`);
+
+line();
+
+// reduce함수 :  배열을 반복해서 각 요소에 콜백함수를 적용한 결과를 누적하는 함수
+
 const ex5 = traders
 .filter(tradersCity => tradersCity.trader.city ===`서울`)
-.map(tradersValue => tradersValue.value)
-.forEach(totalValue =>total += totalValue);
-
-console.log(total);
+.reduce((acc,curr) => acc+curr.value,0);
 
 
-
-
-
+console.log(`서울의 거래 총 액 : ${total}`);
 
 
 
