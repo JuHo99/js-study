@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+
+    <div class="wrap">
+      <ul id="fruits">
+        <li class="fr apple">사과</li>
+        <li class="fr banana">바나나</li>
+        <li class="fr grape">포도</li>
+      </ul>
+    </div>
+
+    <script>
+      const $fruits = document.getElementById("fruits");
+
+      const $wrap = $fruits.parentElement; //
+
+      const [$apple,$banana,$grape] = [...$wrap.firstElementChild.children];//li를 모두 배열처리하고 디스트럭쳐링
+
+      const sameFlag = $banana.previousElementSibling === $apple;
+
+      console.log(sameFlag);
+
+      $grape.parentElement.lastElementChild.nextElementSibling;
+
+      // closest('css 선택자') = 가까운 상위 태그를 탐색
+
+      const $frund = $grape.closest('.wrap');
+      console.log($frund);
+
+
+      // 하위 태그 탐색
+      $grape.querySelector('a');
+
+    </script>
+  </body>
+</html>
