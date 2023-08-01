@@ -1,58 +1,71 @@
 <!DOCTYPE html>
 <html lang="ko">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-</head>
-<body>
-    
+  </head>
+  <body>
     <h1 class="theTitle">html 조작</h1>
     <ul id="list">
-        <li class="obj1">list_2</li>
-        <li>list_3</li>
-        <li>list_4</li>
-        <li>list_5</li>
+      <li class="obj1">list_2</li>
+      <li>list_3</li>
+      <li>list_4</li>
+      <li>list_5</li>
     </ul>
 
     <script>
-        //1. class="theTitle"인 요소의 자식요소를 innerHTML을 사용하여
-        //   <a href="#">요소 객체 조작</a>로 교체하세요. 
-     
-        const $ex1 = document.querySelector('.theTitle');
-        $ex1.innerHTML= '<a href="#">요소 객체 조작</a>'
+      //1. class="theTitle"인 요소의 자식요소를 innerHTML을 사용하여
+      //   <a href="#">요소 객체 조작</a>로 교체하세요.
 
-        //2. class="obj1"인 요소의 텍스트를 "리스트_2"로 변경하세요. 
-        
-        const $ex2 = document.querySelector('#list li ');
-        $ex2.firstChild.textContent = '리스트_2';
+      const $ex1 = document.querySelector(".theTitle");
+      // .theTitle의 요소를 $ex1에 지정
+      $ex1.innerHTML = '<a href="#">요소 객체 조작</a>';
+      // innerHTML을 사용하여 .theTitle의 구문을 교체
 
-        //### 여기부터는 innerHTML 사용 금지.
 
-        //3. id="list"인 요소의 마지막 위치에 
-        // 새요소 "<li id="banana">list_6</li>"를 추가하세요.    
 
-        const $ex3 = document.querySelector('#list');
-        const $newLi = document.createElement('li');
-        $newLi.textContent = 'list_6';
-        $ex3.appendChild($newLi);
-        $newLi.setAttribute('id','banana')
+      //2. class="obj1"인 요소의 텍스트를 "리스트_2"로 변경하세요.
 
-    
-        //4. id="list"인 요소의 첫 위치에 새요소 "<li>list_1</li>"를 추가하세요.  
-        const $newLiTag = document.createElement('li');
-        $newLiTag.textContent = 'list_1';
-        $ex3.insertBefore($newLiTag,$ex3.firstChild);
+      const $ex2 = document.querySelector("#list li ");
+      // #list li의 요소를 $ex2에 지정
+      $ex2.firstChild.textContent = "리스트_2";
+      // $ex2에 접근하여 textContent 를 사용하여 태그를 건들지 않고 텍스트 내용을 편집
 
-        //5. id="list"인 요소의 하위 <li>요소중 첫번째 요소 삭제
-    $ex3.removeChild($ex3.firstChild);
 
-        //6. ul의 자식 노드를 전부 삭제하세요.
-        [...$ex3.children].forEach($li => $ex3.removeChild($li));
-        
-        
+
+      //3. id="list"인 요소의 마지막 위치에
+      // 새요소 "<li id="banana">list_6</li>"를 추가하세요.
+
+      const $ex3 = document.querySelector("#list");
+      // $ex3에 #list의 요소를 지정
+      const $newLi = document.createElement("li");
+      // $newLi에 createElement를 사용하여 li 태그를 생성
+      $newLi.textContent = "list_6";
+      // $newLi에 textContent 를 사용하여 list_6 구문을 추가
+      $ex3.appendChild($newLi);
+      // $ex3에 appendChild를 사용하여 $newLi를 자식요소로 추가
+      $newLi.setAttribute("id", "banana");
+      // $newLi에 setAttribute 를 사용하여 id banana를 추가
+
+
+
+      //4. id="list"인 요소의 첫 위치에 새요소 "<li>list_1</li>"를 추가하세요.
+
+      const $newLiTag = document.createElement("li");
+      $newLiTag.textContent = "list_1";
+      $ex3.insertBefore($newLiTag, $ex3.firstChild);
+
+
+
+      //5. id="list"인 요소의 하위 <li>요소중 첫번째 요소 삭제
+      $ex3.removeChild($ex3.firstChild);
+
+
+      
+      //6. ul의 자식 노드를 전부 삭제하세요.
+      [...$ex3.children].forEach(($li) => $ex3.removeChild($li));
     </script>
-
-</body>
+  </body>
 </html>
