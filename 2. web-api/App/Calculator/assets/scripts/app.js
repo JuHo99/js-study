@@ -1,6 +1,12 @@
 
 // index.html에서 활용할 이벤트처리, 핸들러 등등 작성
 
+// 반복되는 문자열 상수로 관리
+const ADD = 'ADD';
+const SUB = 'SUB';
+const MULTI = 'MULTI';
+const DIVIDE = 'DIVIDE';
+
 // 현재 계산기에 표시될 숫자
 let currentResult = 0;
 
@@ -12,7 +18,7 @@ const logEntries = [];
 
 // 로그 이력을 만드는 함수 제작
 const writeToLog = (operation, prevResult, number, result) => {
-    // 연삭, 이전결과 , 연산숫자, 연산결과
+    // 연산, 이전결과 , 연산숫자, 연산결과
     const logObject = {
         operation,
         prevResult,
@@ -20,7 +26,8 @@ const writeToLog = (operation, prevResult, number, result) => {
         result
     };
     logEntries.push(logObject);
-    console.log(logEntries);
+    // 로그 이력을 입력 받는 즉시 resultsLogBox에 출력 가능하게 입력
+    outputResultsLog(operation,prevResult,number,result);
 };
 
 // 계산 로그를 만들고 화면에 렌더링 하는 함수 제작
@@ -39,14 +46,14 @@ const calculate = (type) => {
     const enteredNumber = getUserNumberInput();
 
     let mark;
-    if (type === 'ADD') {
+    if (type === ADD) {
         mark = '+';
         // 실제 결과 반영
         currentResult += enteredNumber;
-    } else if (type === 'SUB') {
+    } else if (type === SUB) {
         mark = '-';
         currentResult -= enteredNumber;
-    } else if (type === 'MULTI') {
+    } else if (type === MULTI) {
         mark = 'x';
         currentResult *= enteredNumber;
     } else {
@@ -54,38 +61,34 @@ const calculate = (type) => {
         currentResult /= enteredNumber;
     }
 
-
     // 눌린 버튼 확인log
     console.log(`${mark} button click`);
     // 로그생성 + 화면에 렌더링 하는 함수 호출
     createLogAndRenderOutput(`${mark}`, originResult, enteredNumber);
     // 로그이력 쌓기
-    writeToLog('ADD', originResult, enteredNumber, currentResult);
+    writeToLog(mark, originResult, enteredNumber, currentResult);
 };
 
 //================= 이벤트 핸들러 제작==================
 
 // 더하기 버튼 이벤트 핸들러
 const addHandler = () => {
-    calculate('ADD');
+    calculate(ADD);
 };
 
 // 빼기 버튼 이벤트 핸들러
 const subtractHandler = () => {
-    calculate('SUB');
-
+    calculate(SUB);
 };
 
 // 곱하기 버튼 이벤트 핸들러
 const multiplyHandler = () => {
-    calculate('MULTI');
-
+    calculate(MULTI);
 };
 
 // 나누기 버튼 이벤트 핸들러
 const divideHandler = () => {
-    calculate('DIVIDE');
-
+    calculate(DIVIDE);
 };
 
 // ================이벤트 핸들러 바인딩===================
