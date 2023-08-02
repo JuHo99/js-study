@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul class="users">
+      <li data-user-number="4321" data-role="common">뽀로로</li>
+      <li data-user-number="9999" data-role="admin">핑구</li>
+      <!-- data 속성의 경우 전역 속성, data- 뒤에 붙는 것은 자유롭게 만들 수 잇음 -->
+    </ul>
+
+    <script>
+      const [$u1, $u2] = [...document.querySelectorAll(".users li")];
+
+      // 데이터속성 참조
+      const pororoNumber = $u1.dataset.userNumber;
+      console.log(pororoNumber);
+
+      const pinguRole = $u2.dataset.role;
+      console.log(pinguRole);
+
+      // 데이터 수정
+
+      $u1.dataset.role = "gold";
+
+      // 데이터 추가
+
+      $u1.dataset.phoneNumber = "010-1234-1234";
+
+      //   데이터 삭제
+
+      delete $u1.dataset.userNumber;
+    </script>
+  </body>
+</html>

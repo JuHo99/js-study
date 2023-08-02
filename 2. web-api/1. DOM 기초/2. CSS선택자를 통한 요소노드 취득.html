@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        .banana+li{
+            background: violet;
+        }
+    </style>
+    <title>Document</title>
+</head>
+<body>
+    
+    <ul id="fruits">
+        <li class="fr apple">사과</li>
+        <li class="fr banana">바나나</li>
+        <li class="fr grape">포도</li>
+        <li class="fr orange">오렌지</li>
+    </ul>
+
+    <script>
+        // const $grape = document.querySelector(`.grape`);
+        // const $grape = document.querySelector(`#fruits li:nth-child(3)`);
+        const $grape = document.querySelector(`.banana + li`);
+        $grape.textContent = `맛있는 포도`;
+
+        const $fr = document.querySelectorAll(`.fr`);//유사배열임
+        console.log($fr);
+
+        // const $apple = document.querySelector(`.apple`);
+        // console.log($apple);
+        // $apple.textContent = `애플`;
+
+        // $fr.reverse();
+        //  - 유사배열 = 객체인데 배열과 비슷하게 생김
+
+        const foods = {
+            0:`짜장면`,
+            1:`우동`,
+            2:`김치찌개`,
+            age:30,
+            length:3,
+        }
+
+        console.log(foods[2]);
+
+        const $fruiArray = [...$fr];
+        console.log($fruiArray);
+
+        $fruiArray.pop().textContent=`오우뤠인지`;
+        for (const $f of $fruiArray){
+            $f.style.border = '1px dashed tomato';
+            $f.style.margin = '10px';
+        }
+
+    </script>
+
+</body>
+</html>
