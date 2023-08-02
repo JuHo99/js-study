@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <p>아무곳이나 클릭하세요</p>
+    <em class="msg"></em>
+
+    <script>
+        
+        const documentClickHandler = (e) => {
+            console.log('아무 곳이나 클릭함');
+            console.log(e);
+            const $em = document.querySelector('.msg');
+            $em.textContent = `x : ${e.x}, y : ${e.y}`;
+        };
+
+        document.addEventListener('click',documentClickHandler);
+        document.addEventListener('keydown',documentClickHandler);
+    </script>
+</body>
+</html>
