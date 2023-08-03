@@ -28,5 +28,27 @@ const showMovieModalHandler = e =>{
     $backdrop.classList.add(CLASS_VISIBLE);
 };
 
+const cloesAddModal = () =>{
+    $backdrop.classList.remove(CLASS_VISIBLE);
+    $addMovieModal.classList.remove(CLASS_VISIBLE);
+};
+
+
+// 백드롭 영역을 클릭하면 모달이 닫히는 핸들러
+const backdropHandler = e =>{
+    cloesAddModal();
+};
+
+// 영화 추가 모달창의 취소 버튼을 누르면 모달이 닫히는 핸들러
+const closeMoiveModalHandler = e =>{
+    cloesAddModal();
+};
+
 // Add movie버튼 클릭 이벤트
-$addMovieButton.addEventListener('click',showMovieModalHandler)
+$addMovieButton.addEventListener('click',showMovieModalHandler);
+
+// backdrop 영역 클릭
+$backdrop.addEventListener('click',backdropHandler);
+
+//add Movie모달 취소버튼 
+$cancelAddMovieButton.addEventListener('click',closeMoiveModalHandler);
