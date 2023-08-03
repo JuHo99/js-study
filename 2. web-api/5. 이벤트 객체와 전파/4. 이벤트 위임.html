@@ -56,6 +56,9 @@
 
         const $fruitsitems=[...$fruits.children];
 
+        const $newFruitName = document.querySelector('.text-box');
+        //text.box를 가져와 newFruitName에 지정
+
         // 나머지 태그에 sctive를 제거하는 함수
         const removeActive = () => {
             $fruitsitems.forEach($item =>{
@@ -66,19 +69,29 @@
         };
 
         // 추가 버튼을 눌렀을 때 text-box의 이름의 아이디를 가진 li추가
-        // 
+
         $addFruitButton.addEventListener('click',e=>{
+
             const $newLiTag = document.createElement('li'); 
-            // li생성
-            const $newFruitName = document.querySelector('.text-box'); 
-            //text.box의 text를 가져와 newFruitName에 지정
             $newLiTag.setAttribute('id' ,$newFruitName.value );
-            // id를 newFruitName의 value값으로 추가
             $fruits.appendChild($newLiTag);
-            // $fruits에 $newLiTag을 자식노드로 추가
             $fruits.lastChild.textContent = $newFruitName.value;
+            $newFruitName.value = '';
+            $fruitsitems.push($newLiTag);
+
+            // li생성
+            // id를 newFruitName의 value값으로 추가
+            // $fruits에 $newLiTag을 자식노드로 추가
             // 추가된 $newLiTag의 textContent를 공백에서 $newFruitName.value로 교체
+            // $newFruitName.value 값에 공백을 넣어 추가를 넣었을 때 텍스트박스를 초기화
+            // fruitsitems에 newLiTag를 push
         });
+
+        const addFruitByEnterHandler = e =>{
+            if (e.key === 'Enter') {
+                $addFruitButton.click();
+            }
+        };
 
 
 
@@ -92,8 +105,6 @@
                 return;
             }
 
-
-
             console.log(e);
             removeActive();
             e.target.classList.add('active');
@@ -102,6 +113,7 @@
             $msg.textContent = e.target.textContent;
         });
 
+        $newFruitName.addEventListener('keyup',addFruitByEnterHandler);
 
     </script>
 
