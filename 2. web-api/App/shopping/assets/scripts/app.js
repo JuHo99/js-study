@@ -42,40 +42,56 @@ const p2 = new Product(
   '국밥 마이쩡',
 );
 
+
+// 화면 가장 상단부에 들어갈 장바구니 총액 정보 태그 생성 클래스
+class ShoppingCart {
+  constructor() {
+    // 장바구니에 담은 Product들을 저장
+    this.cartItems = [];
+  }
+
+  render() {
+    const $cart = document.createElement('section');
+    $cart.classList.add('cart');
+    $cart.innerHTML = `
+      <h2>총액 0원</h2>
+      <button>주문하기</button>
+    `;
+    return $cart;
+  }
+}
+
+
 // 한개의 LI태그를 생성하는 컴포넌트 클래스 설계
 class ProductItem {
   constructor(product) {
-    this.product = product
+    this.product = product;
   }
 
-  // 담기버튼 클릭 이벤트 핸들러
-  addToCartHandler(){
-    console.log('장바구니에 상품 추가');
+  // 담기버튼 클릭이벤트 핸들러
+  addToCartHandler() {
+    console.log('장바구니에 상품을 추가함!');
+    // 이 핸들러에서 누른 그 상품의 정보를 알아야 한다.
     console.log(this.product);
-    // 이 핸들러에서 누른 상품의 정보를 알아야 한다
   }
-
 
   render() {
-    const $prod = document.createElement('li');
-    $prod.classList.add('product-item');
+    const $prod = document.createElement("li");
+    $prod.classList.add("product-item");
     $prod.innerHTML = `
-            <div>
-              <img src="${this.product.imageUrl}" alt="${this.product.title}">
-              <div class="product-item__content">
-                <h2>${this.product.title}</h2>
-                <h3>${this.product.price}원</h3>
-                <p>${this.product.description}</p>
-                <button>담기</button>
-              </div>
-            </div>
-            `;
-
-            const $addCartBtn = $prod.querySelector('button');
-            // $addCartBtn.addEventListener('click',this.addToCartHandler.bind(this));
-            // 바인드를 이용해서 this의 위치를 바꿔준다
-            $addCartBtn.addEventListener('click',() => this.addToCartHandler());
-            // 화살표 함수는 this를 가지지 않음으로 화살표 함수를 사용해 this를 상위로 보내주고 addToCartHandler를 호출한다
+        <div>
+          <img src="${this.product.imageUrl}" alt="${this.product.title}">
+          <div class="product-item__content">
+            <h2>${this.product.title}</h2>
+            <h3>${this.product.price}원</h3>
+            <p>${this.product.description}</p>
+            <button>담기</button>
+          </div>
+        </div>
+      `;
+    const $addCartBtn = $prod.querySelector('button');
+    // $addCartBtn.addEventListener('click', this.addToCartHandler.bind(this));
+    $addCartBtn.addEventListener('click', () => this.addToCartHandler());
     return $prod;
   }
 }
@@ -84,41 +100,56 @@ class ProductItem {
 class ProductList {
   constructor() {
     // 상품들을 모아 놓은 배열
-    this.product = [
+    this.products = [
       p1,
       p2,
       new Product(
-        '햄버거',
-        'https://images.chosun.com/resizer/5jStJ5InVS4u3iHvEzB8y_tGrr8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/HV765ADF7VF4FLG5KISDNFMUJ4.PNG',
+        "햄버거",
+        "https://images.chosun.com/resizer/5jStJ5InVS4u3iHvEzB8y_tGrr8=/616x0/smart/cloudfront-ap-northeast-1.images.arcpublishing.com/chosun/HV765ADF7VF4FLG5KISDNFMUJ4.PNG",
         16900,
-        '꽈뜨로 맥씨멈 스테카 버거~'
+        "꽈뜨로 맥씨멈 스테카 버거~"
       ),
       new Product(
-        '애플워치',
-        'https://img.danawa.com/prod_img/500000/535/481/img/15481535_1.jpg?_v=20211215103510',
+        "애플워치",
+        "https://img.danawa.com/prod_img/500000/535/481/img/15481535_1.jpg?_v=20211215103510",
         400000,
-        'APPLE watch 2세대 2022'
+        "APPLE watch 2세대 2022"
       ),
       new Product(
-        '애플망고',
-        'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wCEAAoHCBYWFRgWFhYYGRgZGhgcGhwaHBoYHBwaGhgaGhwcGR4cIy4lHB4rIRgaJjgmKy8xNTU1GiQ7QDs0Py40NTEBDAwMEA8QHxISHzQsJSs2NDQ0NDQ0NDU9PzQ2NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NDQ0NP/AABEIAOEA4QMBIgACEQEDEQH/xAAbAAABBQEBAAAAAAAAAAAAAAAEAAECAwUGB//EAD4QAAEDAgMFBgUDAgUDBQAAAAEAAhEDIQQxQQUSUWFxIoGRobHwBhMywdFCUuFishRyksLxJKLSBxUjQ2P/xAAaAQACAwEBAAAAAAAAAAAAAAADBAABAgUG/8QALhEAAgIBBAEDBAEDBQEAAAAAAAECEQMEEiExQQUTUSJhcYGRMkKhM1KxwdEk/9oADAMBAAIRAxEAPwD0NSUUkgMklFJJUQSSSShBJk6ZQg6SSSogkkyShCaYvAtIWFtP4gYyWshzuOg6cVl4THvq7++ZyjhBmR0ssZJ7VYaWnmsbyNcI6avtOkz6nieAufJAv+JKQyDz3ADzK5bE0IP9OU5noVBtMcZWfdTVo6GDRYskFJO0zqR8TM1Y/wAlfS+IKRzDx1A+xXKMo8D91axgzlYeZoM/T8P3Ozo7SpP+l477eqLXCtZ7yROHxj2Wa4wNMx4ZLS1C8oWn6d/sf8nZJlkYTbYNnjd5jJarHhwkEEckaM4y6YhkwzxupIkkkUy0BHSSSUIJJJJQgkkklCFaSSSo0JJJJQgkkkyhBymTpKFjJ0ydQoZcx8RbazpsNsnEa8hyWztvFGlRc4WJhoPM6+AJ7l5tWrbx5LEnR0vT9Osktz8F1Sp3orZFXtOv+n/cJ8lmkT6IrZYh7v8AI77JbLK4s6utglppr7M0MXV3c8sne+OqVEiYPiNQdVTtEgk8xKqw1WQP6THdEj0clsbfRwPSNS45PZfT6/Jqb7YsO5MWE6Wn3ZKiPPuRTWcLyo27PQyaiRFOBYaKbGTrIV7GGLqwMWNzAuZTuDhbxV+He5hlpI9D1CgKUeKspvmxHv8AKkcjXIKdNU+UbODxwfY2dw0PT8Itc+Kd7WK0sFi97su+rQ8f5T2HUKX0y7OZn06X1R6+A5JMnTYkIpJJlCDwklCShCtMnSJVGhFYm0vialT7Le27l9I6n8LD+KfiImadMw3U6n+FzVJ0g23nQeff4KrSHtPpN/MjdxXxPXf9Lg3k0R5mSsvEYqq763u7yTzQLXR78laa29nJNhHQR9gq3o6sNLCK4ROniHtNnOHOStLB7frsNnuPJ3aHndYxBkJ2vOnqqUi56eElyj0DY/xZSdDazdx37hJb3jTzXWseCAWwQYiIy4rxYCRrrGq1fh74sfhXhlQl1Em4zLZzc3lxCPjyJcM5Op0P90P4Or/9QqhFBnDf8910fdecU+C9H+PqrXYMPBDgXtLCDIILHwQeBBXl9KqZBJ6oWo7G/SXUP2a7QIj37urMA7tP/wAh9WhVU4LZU8D9Tv8AKf7mpKaqLHvUJf8Azz/DC8ULNPKPt9kNgPqcOU94cB/uKLeJa08CQgaR3ag5hw6y0x5wl4HjtLLbni/ujosIAcxw55a+KMpsuTppZZ2CqSAR3ytGnUHhb8WWpHrcqdhDYyI95qeeig52saKxhmAqaixd/JDzVFahPfnzH2RW7796qQbxS7+lkUqK6D4AEkka6/8AKm+5nVM+nwMKwBRydcGXXaNHC199t8xn+VeFkU3lpkaea1WPBEjVdPTZvcjT7Rzc+La7XTJpkgUk2LCSSSUIQXO/GG0/lUwxphz8+Tf5y8V0YC8v+KcX8zEP4NJaOHZt/KyxrTY98/wY9ep46/ZWYZ8aHuKErFF4Vs+4QpM9BjikhPaSZm5vnz1T9c+VuKYs0jjdOwHpKqwl2W4OnvvayQCTF8rAm0cgtHF7HI+lwIubyM+YlZLqgYARO9Of3HNdDs3age28W+pvC+Y5HymOCBmlONSj0crX5s+Kp43wu1RkOoPbci0ZiHf2zCAxjd7v/K67EYaRvsyJ0zCycTQa8EPF/wBwgO7/AN3f4qoah/3ITxerqTrIq+6MsbbcMMcM8kta4PYf22cHN6S6RzlZ1KuCckVtPZjmtLgA5v7myYF/qGbe+3MrDo1N10FNprJG0zoYcmNSuDtM6fC1hEIrZw7br5t/3NWDTqWHFauxa5NTd/pPqD9ktlT2sLr57sEvwzfYwlnQ90QgcUN1zHaBw9Vq4amNxyy8c2QOohKR4o8dF1Lg0MI4tkZkTzRf+IsdcuqCpNkuOd7ayr6YM3sbHgZujJ2j3NJq2ajHyJ8oVlB2SowzZ0HBEtAHchN10KypWiZdwSB6pEXTg39EOSbBljU8Jqad2aG+DHkchEYB43t02nLr/KHhRyv4LWPI8c0/gxOKlFpmw9habhMCi8NWD2gmLi/XVV1cNF23C9DsuKlHlM5G6ntfZRKdRlOsUzRfUAYxztWtcfASvE8Ud5ziePqvZdqk/JqO/wDzf/aV4y9l3HvV56jSQ/6arbb+wO/norqT4ymfdyo7g4SpU6d7jMeqUbO30g0tOfX084+6ZjAXQRnly68VOkwkXAk8esW5K75caRlJFj/xl5LFmvBTVo7x3bW16z4rOaH03ayMo9OYW3hmEEOGnKIPPiicZs9rmjsw7SOMcVlz5oXy1VA+x9qSYH16s482Tn0z6onHVWOBcLZ8r/lcvtLCPpuvoZBHHiDojcDtFuIHy6pDav6X5B8aP/q5qpYlW6PR5zWaNRe6HXwTO1A062ygrJ2kyjUO8wbj9RHZd3fpPMW5ao1uzXOcQRugGCTx4DieS08NhmU4gdr9xgu7v29ykZxxcrsTx5JYnaZzWGwFYi1N/e0gdxOfcjNlOcyu0OBaTIIIg9oEDPnC6JtUSfupYkMqN3XDmCLFp4g6LL1O61KPDH36i5xcZLhquDXw7JpTxMd33XPYvEgOknIz36BHt2iW0i0xvMuToRlPmLLjsTi9+oSLDT8q4Y1JKvAppcG/Ir6XZ1GCxYEdrO5hHNrhxzAJGvVctg6L3uDWAlxyAW6zYVQAF72N5SSe/dEeazKO09U9Vih/W0jcwzxnvTe/M5rQa+ff56Ll2YZzMqzDyLXR5SiqGMqg3LXj+l0HwdEoTdvsXefBN/TNfvg6GnTMZk5+7KbWFBYXHggAy08HCD55hE0qx5ZLSqimmWaqwRwUS7UJB2iFOKMPkkSmcmCYlLyLo19ku7BHO3eFoTEC0e4QOzGgM5kk+gRQdFjEnMr02kTWGN/Bxc9PI6+S2G8klRLP3N8R+UkwCB9pN3qdRgBlzHebSvHKjL+XivWMS9x1ieGcLzra+F3ajhzMJHUTTpo6/py2tpmS1lgIymUThqV+R4++qnTZ3g39+aOoAC8HokJ5KO2nwWU6I7MC95/ngp1cPF4j8H1yyVtAD8z5FGEA2PL2ENTfkHKVGYwwbDQQOUjPwWtQZvi+Y/GSH+WJJGfPhlKJwjeesrPuJMBkd9FWPwAeN0gQfX36LnHfDjd8OdO7nAsXcL6Dn4cR2tRmvK6AxDzeGknwA7zoqeeSf0s5WrztR2R5b/wZGK3hzMeAQ9LCl5tJOsadTkEXUpzJcZPAfc/hA/4x2tt362/pLZs5o43g9ymNX5OXLTZIx3SRoDAhl3uA5CXn7DzWLjdu0abnN3Kji0wT2GjuzWlTxQBH6gcidFxe3L1nkakf2hN6fDCcvqJhSk6aNYbXZW3mhrm9lxuWmYzFgNFmUMNvvDWnO8nQcT7zWVhQd8XIF5jhBlHbJxU1HSMwY8Qm5YvbT2fAyp+3e34/yejbG+XQpOawdoCS43cep+yofj5GsnNAvG92i6JiWgwrmvGjROpiVy5NvtiUm5O3yxOdvWkhRqAD9SmXPnIHoFW+m6+8AJ7v5WOC445S4irINxzm5Hu/hbGz8eTE9kjXRD0djOczejo3InxiEJhqTjUFMNcHTBnIczyVJxd14H9PDU4nuSdeUzq6WJBCu+Ys9my3MyeSOY92U2VYMOsUH3E+LO3UZK0H7/BTpM3iANVRTvktjB0g0cTqUfBgeSXPQtmyKC+4Qx8RpEZcArWvkXN1UCoOcu3HI4o5TjZd8o8R4JIfeTLXu/Yr238gtWoCJnNc3t3Chx3uPr3LepsEenMFU4qjvNLUpNOUR3DLZO0cM1pAjUZAdVcxxiTrwNgi8Vhix8xqZ5H+VBtG8T2cxy5LnzdHX9y0F4aHAcvP+Fe4iRnPHy99ULhxB9FoMpktMITkjMpopqUxwF8kRQZBlM1lvfFXsbbJAlIw+UV4uoTYZoT5XFawpg6JzSHBDbkD4XRiHDZrC21RLIcPqGvHiDxC7CtY5LA24zebujp4oumyPejORKUHZz+Hq72WR0/aeCwMeO26c5WpicC9plpPUIilsB9Tcc8imHndFSod1hIBdnxgHqu9jhsdrpnGUFBt+DnsPQLt6P2n36qp1TcG6w9o/U4f2t/K7v4a+FqdQVHVHn5TSWhw7BfGufZbHr1UGYJtR+5haDGsGdR7e2eYLvpHmiSyxgrk+DUMbyPg47DY7Enssc89Yd5kLrdl7ExLgHVar2j9oMOPWMl1ey/h6nQExvP1cdOO6PZWgWrj6n1C3WOKX3rkfw6XHHlqzmK+y3FsNLiRkJJnldbWzdnbrWlwBcNMwP5WpQoiOaT2pJ5ZyjTGnNdRVFcpBgN4vlOqctUmhYIxA6FV1cMDf2FcArGSqMbmuUDUKTwY00K1mUzx+6FARmGxX6XZ6c/5XX0eaMvpbFM6faLGUSrPkDVO15Sc46mPJdVRihNuRD/Dt/akntz8SkpS+CW/kzalPdfbKIPDiFS+nOc9yLx7odEZzHcEIcs0GcdsmguN3FMzdoUG8+YIN/wsw0QJ1C1MS8k52QbxB4j3dI54braHsU2lTKAAD3QUXRGhlDPCup1O1dc13Fh7TQU2n4K1jdNFFgVlJl+SE5XIrlIKp05Sfkp74QWJq8FqbilwCTbYJiqixmvL6rWtaXOMw0annwAnNG1Q57oaJJsIXR7M2azDMkwajh2j/tHIJ70/T7nufSBanLUdq7YPgNhU6Y360PfwzaO7U81zvx1i2ODGNaB2t63SB6rosZiCblc3S2Z8+qXvuwG3Axqupnyxhjt8IRjjlOVIfZWGc9jWXFNo6bx1PSVp0qvynBpENORGSPaA0Q0QAq6rA4QRK89lzyyyuXXhfB18MIwW2uAguVZcnwdItFzIH0zwU6tCbi3LRBr4LtJ0QFSCiWPBzWQ+oWmDZE0aq2jUsXFmg6nwVRYmp10UwAqUBbceylrFaSB1TPcBYIepUhQpJyLGOMypVKrRmYI15rMx20hSA1ccgPVBUmPe7ecbaBbVr6kGjg3K5cI66k/eE+N9VcCs/ACBHFaDQvQ6bL7uNPz5OTljtk0h5PJMpb/PySTAIqxdGXCeByWbSZMjgt0tvHJYz+y+MpMFVqI1Ui8Eu4mdiKN0NVYFpYzCuOtuseixNqPNNhc0NJBEySGtBzcd0SQOASUo8jkZcEKj2N19MlbTYFhUsYaxAbiBc5UqZA/1uDo6yFqYclg3cwAANbDiSbpPVadtXHsLCdPk06SvBhZQx9xEQefpxUqm0mASXtHUgLlvFkvoNLLFeTSq1YCysfjWMG890ALC2p8StFmy8+De8rBw7amLr06bnHtva0AZNBMEjoJPcn9P6fObTnwhWef4PWfgzDb7P8S5u6Hz8tpz3Mt883aco4lE7RdLzwC2aobTY1jQA1rQ1oGgaIA8Audx9TM++AHivQe1DHBRXCXJz90pSfyzPrMdUduNyP1Hg3+Ue2gGABuShhXhmUEm7jxKKe0EbwXnNXqPflx0uvwdLFj9tJMEdmlSZJ5api0kxqjKbIEJTsYlKkQNkykRdLdV0YsjVoteIIn1HggamCcy4Mt8x3a9VqQpNWiLJKPXRktdKOomAnxlAA9kX198ULiK+6APeSphL9xKiWIrboJ9yclXSxAdIB014oGm0vuZsDAm0k58zBRlLDwqYXbGKp9lFPBdok3JvJWlh2EWgdyVMImmyLqAcmRvsmHZHgY8VeZOSFJz5+q0t5dj093Br7iGbhoH+W73CSv3ky6NIDbCovZY+12O3soFjPPUeC2H9I5/hC7UpkskZC/MwmMsd0WgEJbZJgbWbwFrcysfbGzab3sDwS4Bzm9kFgyz3gRNrWnNbODfMjhl0U8VTtPateG5nkk4wtWMuVOjgNrPfTeQ+tUawAR8qnLW6dt0SDnEaaDUwUpY0hxfYEOdcnUGSLeAWv8AEOz95ge0BpHac7d3iA0EgFoc3euYzMTzkC7Nw9Q0gajWg6bggFn6SB00WJxpBIysx8RhZ0+6za+zZ0uut+QSJAscuCZuzi7T7BDVltnn1bZ7piF0fwBs7/rmEj6G1Hd+7uj+5dOzZDWiXAKfw6xrcVb9jx6H7JjHJ7kmCm7i6N7atS65jaJc5263MDePoB5k9y6Paw7R7lzWywX4itF7NHhKrXSaxOu3wVporem/HJltfWYTIkIzCbbAMOBaeeRW+dnj9RA96oPE4OiM79AF55rj6lX7o6/vQnxVl1LFN+oEQbcSESb3FwuaFEBxLAQBblKKweNcJByHgh/gqWHyjbhIBV0q4dyPBXbqgB2uGTDUnHdE+CTeJyQeLr5nQK2zMYuToqr4kNuTxPhdZjTvneNhkB71UjLyiqWGBEEWVDyUYL7ltDDwrtxBHepnOW6HhyKMpYqVKBSUu1yi+izUq1ykLhQcrF7tkCbgcSPVHwY5oHCN3nz+0eZsPutHeXY0EKx7n5Ytnf1JEdwpKW+Ek/wA5DHiRZV1Gh7SLgaqwXGqZucJ0WOfoO3HwMrsygWyjugdy1ffBBbVpEOkCBE2ykH/AJRFB+80HxSdbZOP7Gr3RTM3bGHeGMNPecGElzQWl5BaRvMNSQ57c78TrCwgzCvnep4uq4mWsLa4zAuQd2mJMnhdddiMKx5Bc0EgW5TB6aDwUyOKjRFIA2Vhdym0FjWZkMEEMBNm21AiYtMo0sVrOnimf3BSkkZu2C12DdWJs9+5iGP/AKoPR3Z+6369ORclZNTCXs2+k+/sgzbUk0EjVNM2ttNjtcR6LkPhWp/1FQXvJz6rtK7DVof1R/3AXHqvP9gvLMbuk7u8HC/FTW8xtfZk0/bX5R1O0q144E35cFkul5DRmfIcUdttwBAEZGYM6/wobJo2Ljmcv8oXAzJ+47OpjahiUiTsIGgAZD3KDrYeVsuCoq0pQmiQytdmSKhbme+/gjcHtGbG48wqa1FCGgQZbYq7+QzhGaN+vVsIy9VjuxLi4jTj5ImlWMcxoq6eHvKiYOEVHssoU0W1iTGK+myVEDnMi2lNiLays/E4csMi7fT+FrExYKL2yCDkVfQOORp/YowlWWp61SAhqFMsJByzB+x5onB4c1CSZ3W58zo0fdbhjlkkox7Zc9sW5PoL2fThskGXGe7IfnvRUJi4KDnr0EIqEFFeDnyblJst3kkPvOTrW8ztNFoi3vmk8cM0nAC+qQdbmnxYF2hTLmdkiRBvw18kBgDG8ycjbjBWqbC4z9ws2nRDagJ5juKXzqmpB8T4aCwOKkOTT6eqsDRwU1VFWVbh1KcUh3qxJSkVZU9tskE9i0nISqxDnE1Fktn1N07pyK5n4s2SaVdmLYJZvAVAP0zbe6E581vtN+C0KLw9pa4AgiCDcQcweStRWXG8b/Re5wkpI4HG1t4hozcYC3aEBoA0AHghttbBNJ3zmAuYB9IuW8TzEeCCoY0HVec1GGeGW1o7MZRzQTizbD+KctnJB0sUCiGu4ICdgpQaGdSlUupBoJOQRbXzmsfbeIuKbT/mWkrNY90pbSGFBqbzjxlvIDJFYLFSd11nDwI/Kls2nAVGPwuoseI4qBnTk4v9GvTpz0VpdoFmbO2hvDddYjz/AJRpcpdCsoSUqZMlQqVQ0XQuLxzWi5XN/wDu1XEVf8Ph2b7plzphrBa7iMgP4W8eKeV1FWXtUVulwjpcL/8ANU3G5C7jwb+TkF0NWm1jQxogDh9/VVbG2WzDU90dpzjL3ZFzjryAyA0AVxpSZMn3yXotPpFghXcn2/8Ao5+XN7kuOl1/6UEclXUiPZRwwo1T/JaEX22D3oy97kktbdHBJT2WT3F8EWGdUrzKZ7eVk5MpoAMWzdZuJDt83EQIt49dFpA3AlBbTojckC4cCM851jS90PKt0WjcHUkEUjIBUwEJgamYRhCDB3GwklTEoynaAkQtGRQq6zJVspKmkyWCQpMMGylVZyUA3ih00zfaDqNWQsXanwyyoS+kdxxuR+lx5jQ8x4I5rgLzCJoYkG03RpKGaO2aMxlPFLdFnB4vDVaJh7CP6s2noQno4w8V6GYIggEHjdZOL+G6D7hpYeLDA/0m3kuZn9I843+mdHH6lFqsq/aOfG0WtaXOyaCfBYmzt6o41HZuJPQaBdJj/hB7m7rKgIkSHAgkDSRKpOwMQwQ1jT0cPvCRlos+ONbW2/8Agax6jBy4tc/PBdSqNaLkdE1TFUyLkLMqbExZ/wDqP+pn/koN+Fsa79LG/wCZ3/jKzHRZ5eH/AAZk8C5c/wCB8TVYDvNOSExm3dG3PJbGF+A3G9avbgwf7nfhdJs34dw9C7KYLh+p3ad4nLuTuH0mTdzYDLr8aVQVv5Zw2A+G8VijL5pUzmT9Th/S37mO9d9sfY9HCs3KTA0ZuObnHi46lHPrAahBOqOeMiJ1E+S7GLDDDGoo5uTNLK7kwl72zc9LpNdOQ8oUKWFa28X8T5qT3yLIteWCsqqucZaM4ztbmmoYZoAc+S4auub8OHcr204vKZziTFo1U2rslj7zUlD5KSsoiHZ38UpgWKd7eCUzAj+IVEEWjlKr3rGRxUznlldJ3akRwULM1vYeNOK0isvHtLXtzIdMco9hGUKwLRdKL6ZuIZrdFMvTQq31VWaxPJW5xRSiwktCgaoQb3SblOJ0Q3k+Ea2fIT82ch3od7TOZ7lZujVXtZwC1Tl2Vaj0AupzmEmMvr74QjzQnOAkzDNHEq1iZN/BCnXI5+qLZUkTfvVD6zWCfS6rOId+wgTeSJjjHVHi3Ht2DdMOD1IOWcKjs4t7umNR5MjLhOfPJE3GKNPeTF3NZe89xkGANL9837lFuGc4y+/pmpufhEoOqY1jbTfghnYxziQ2IHnaUqWE3Z1nytEK2nu6cVOX2TgpoUCbuBmTn1MZItoDAB3cVGSRlE96sbSVpV0QjvEnOyk1sBOXhM1pOvFWQi8zyCmGgXTyBqq4J6cFCD/MHuElX8jmPD+UlXJCagz6u5JJQhI5qNLM9fsEklRAHaube/1agsFm7qPRMkkdR/qIaxf0MK/P3Tuz98E6SwyxDT3opVMikkp4IW0EW1JJM4ugMuySoqZJJIvkwM3LwUqn0nofQpJKzI1P6B0HopDIJJLSISGasckktIgMP19fsFPDZBJJUQJp5DonCSSsoqp5nqrGpJKEK3/V3flNRzPcnSULLUkklCj/2Q==',
+        "애플망고",
+        "https://m.thegiboon.com/web/product/big/202104/ea08c22e8939ab1977487abc826b8ab8.jpg",
         60000,
-        '맛있는 망고'
+        "맛있는 맹고~ 당장 사먹어야지~"
       ),
-    ]
-  } // end
+    ];
+  } // end constructor
+
   render() {
-    const $app = document.getElementById('app');
-    const $prodList = document.createElement('ul');
-    $prodList.classList.add('product-list');
-    this.product.forEach( (prod) => {
-      const productItem = new ProductItem(prod); //prod를 받아 클레스 ProductItem에 넣어서 productItem을 생성
+    // console.log('render!!', this);
+    const $prodList = document.createElement("ul");
+    $prodList.classList.add("product-list");
+    this.products.forEach((prod) => {
+      const productItem = new ProductItem(prod);
+      // console.log(productItem);
       $prodList.appendChild(productItem.render());
     });
-    $app.appendChild($prodList);
+    return $prodList;
+  }
+}
+
+// ShoppingCart와 ProductList를 합쳐서 렌더링처리하는 클래스
+class Shop {
+  constructor() {
+    this.render();
+  }
+
+  render() {
+    const $app = document.getElementById('app');
+    $app.appendChild(new ShoppingCart().render());
+    $app.appendChild(new ProductList().render());
   }
 }
 
 // 렌더링 명령
-const productList = new ProductList();
-productList.render();
+new Shop();
+
