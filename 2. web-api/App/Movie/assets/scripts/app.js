@@ -42,9 +42,14 @@ const clearMovieModalInput = () => {
 };
 
 // 영화추가모달을 닫는 함수
-const closeAddModal = () => {
+const closeModal = (flag = 'ADD', isBackdrop = false) => {
     $backdrop.classList.remove(CLASS_VISIBLE);
-    $addMovieModal.classList.remove(CLASS_VISIBLE);
+    if (isBackdrop || flag === 'ADD') {
+        $addMovieModal.classList.remove(CLASS_VISIBLE);
+    }
+    if (isBackdrop || flag === 'DELETE') {
+        $deleteMovieModal.classList.remove(CLASS_VISIBLE);
+    }
     clearMovieModalInput();
 };
 
@@ -68,37 +73,18 @@ const renderNewMovie = ({ id, title, image, rating }) => {
     const deleteMovieHandler = e => {
         // delete모달에 class visible 달기
         $deleteMovieModal.classList.add(CLASS_VISIBLE);
-
+        $backdrop.classList.add(CLASS_VISIBLE);
         // 클릭한 태그의 근처 li의 movie-id값 가져오기
         const movieId = e.target.closest('.movie-element').dataset.movieId;
 
         // 배열에서 해당 아이디값을 가지는 객체를 찾아내고 인덱스를 알아내기
         deleteIndex = movies.findIndex(m => m.id === movieId);
         console.log(`클릭대상 인덱스: ${deleteIndex}`);
-
         target = e.target;
-
-        // // 그 객체를 배열에서 지우기
-        // movies.splice(deleteIndex, 1);
-        // // 실제 li 지우기
-        // e.target.closest('.movie-element').remove();
-        // // 영화가 모두 삭제 되었을 때 entrytext를 보여줌
-        // entrytextOpen();
     };
-
-    const deleteMovieDanger =  () => {
-        console.log(deleteIndex);
-        movies.splice(deleteIndex, 1);
-        deleteIndex.closest('.movie-element').remove();
-        entrytextOpen();
-        $deleteMovieModal.classList.remove(CLASS_VISIBLE);
-    }
-
-
 
     // 삭제 클릭 이벤트
     $newMovie.addEventListener('click', deleteMovieHandler)
-
     $movieList.appendChild($newMovie);
 };
 
@@ -156,7 +142,7 @@ const addMovieHandler = e => {
     console.log(movies);
 
     // 모달 닫기
-    closeAddModal();
+    closeModal();
     // 화면에 입력한 영화정보 렌더링하기
     renderNewMovie(newMovie);
     // 영화가 추가 됐을 때 entry-text를 가려줌
@@ -176,22 +162,22 @@ const deleteMovieModalDangerHandler = e => {
     movies.splice(deleteIndex, 1);
     target.closest('.movie-element').remove();
     entrytextOpen();
-    $deleteMovieModal.classList.remove(CLASS_VISIBLE);
+    closeModal('DELETE', true);
 }
 
 // 삭제 취소 버튼이 눌렸을 때
 const deleteMovieModalPassiveHandler = e => {
-    $deleteMovieModal.classList.remove(CLASS_VISIBLE);
+    closeModal('DELETE', true);
 }
 
 
 // 백드롭 영역을 클릭하면 모달이 닫히는 핸들러
 const backdropHandler = e => {
-    closeAddModal();
+    closeModal('', true);
 };
 // 영화 추가 모달창의 취소버튼을 누르면 모달이 닫히는 핸들러
 const closeMovieModalHandler = e => {
-    closeAddModal();
+    closeModal();
 };
 
 // Add movie버튼 클릭이벤트
