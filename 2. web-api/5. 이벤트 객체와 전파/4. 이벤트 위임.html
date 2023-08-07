@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <style>
+        #fruits {
+            display: flex;
+            list-style: none;
+            padding: 20px;
+            border: 2px solid red;
+            flex-wrap: wrap;
+        }
+
+        #fruits li {
+            width: 100px;
+            cursor: pointer;
+            background: orange;
+            margin-right: 10px;
+            margin-bottom: 0.5rem;
+        }
+
+        .active {
+            color: red;
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+
+    <ul id="fruits">
+        <li id="apple" class="active">Apple</li>
+        <li id="banana">Banana</li>
+        <li id="grape">Grape</li>
+    </ul>
+
+    <div>선택된 과일: <em class="msg">Apple</em></div>
+
+    <label>
+        # 새로운 과일 추가하기:
+        <input type="text" class="text-box">
+        <button id="add">추가</button>
+    </label>
+
+
+    <script>
+
+        const $fruits = document.querySelector('#fruits');
+
+        const $addFruitButton = document.getElementById('add');
+
+        const $fruitsitems=[...$fruits.children];
+
+        const $newFruitName = document.querySelector('.text-box');
+        //text.box를 가져와 newFruitName에 지정
+
+        // 나머지 태그에 sctive를 제거하는 함수
+        const removeActive = () => {
+            $fruitsitems.forEach($item =>{
+                if ($item.classList.contains('active')) {
+                    $item.classList.remove('active');
+                }
+            })
+        };
+
+        // 추가 버튼을 눌렀을 때 text-box의 이름의 아이디를 가진 li추가
+
+        $addFruitButton.addEventListener('click',e=>{
+
+            const $newLiTag = document.createElement('li'); 
+            $newLiTag.setAttribute('id' ,$newFruitName.value );
+            $fruits.appendChild($newLiTag);
+            $fruits.lastChild.textContent = $newFruitName.value;
+            $newFruitName.value = '';
+            $fruitsitems.push($newLiTag);
+
+            // li생성
+            // id를 newFruitName의 value값으로 추가
+            // $fruits에 $newLiTag을 자식노드로 추가
+            // 추가된 $newLiTag의 textContent를 공백에서 $newFruitName.value로 교체
+            // $newFruitName.value 값에 공백을 넣어 추가를 넣었을 때 텍스트박스를 초기화
+            // fruitsitems에 newLiTag를 push
+        });
+
+        const addFruitByEnterHandler = e =>{
+            if (e.key === 'Enter') {
+                $addFruitButton.click();
+            }
+        };
+
+
+
+        // 클릭한 과일에 클래스 active를 부여
+        $fruits.addEventListener('click',e=>{
+
+            // ul의 영역을 눌렀을 때 이벤트 취소
+            // matches(' css celector ') = 지정된 선택자와 일치하면 true를 리턴
+            // console.log(e.target.matches('#fruits > li'));
+            if(!e.target.matches('#fruits > li')){
+                return;
+            }
+
+            console.log(e);
+            removeActive();
+            e.target.classList.add('active');
+
+            const $msg = document.querySelector('.msg');
+            $msg.textContent = e.target.textContent;
+        });
+
+        $newFruitName.addEventListener('keyup',addFruitByEnterHandler);
+
+    </script>
+
+</body>
+
+</html>
