@@ -37,12 +37,14 @@ const fetchGetPosts = () => {
         const postList = JSON.parse(xhr.response);
         // console.log(postList[0].title);
 
-        postList.forEach(post => {
+        postList.forEach(({id,title,body}) => {
             const $postLi = document.createElement('li');
             $postLi.classList.add('post-item')
+            // li태그에 식별 아이디를 부여
+            $postLi.dataset.postId = id;
             $postLi.innerHTML = `
-            <h2>${post.title}</h2>
-            <p>${post.body}</p>
+            <h2>${title}</h2>
+            <p>${body}</p>
             <button>DELETE</button>
         `;
             $postUi.appendChild($postLi);
@@ -75,10 +77,38 @@ const fetchNewPost = (e) =>{
         alert('게시물 등록 성공');
         }
     };
+};
 
+// 삭제 이벤트 등록
+
+const fetchDelete = (id) =>{
+    const xhr = new XMLHttpRequest();
+    xhr.open('DELETE',`http://localhost:5000/posts/${id}`);
+
+    xhr.send();
+    xhr.onload = () =>{
+        if (xhr.status === 200) {
+            alert(`삭제 성공`);
+        }else{
+            alert(`삭제 실패`);
+        }
+    };
 };
 
 
+// 삭제를 클릭할 때 실행 함수
+const deletePostHandler = e =>{
+    if (!e.target.matches('button')) return;
+    
+    // 삭제 클릭 대상 아이디 잡아오기
+    const id = e.target.closest('.post-item').dataset.postId;
+
+
+    fetchDelete(id);
+}
+
+
+$postUi.addEventListener('click',deletePostHandler);
 
 $addForm.addEventListener('submit',fetchNewPost)
 

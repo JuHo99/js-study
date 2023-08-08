@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <pre></pre>
+    <button id="btn">수정</button>
+
+    <script>
+      const fetchPost = () => {
+        const id =3
+
+        console.log('click');
+        // 서버에 수정 요청(PUT, PATCH) 
+        // PUT : 전체 수정
+        // PATCH : 일부수정
+        const xhr = new XMLHttpRequest();
+        xhr.open("PATCH", `http://localhost:5000/posts/${id}`);
+
+        // 서버로 보낼 데이터(payrode)
+        const newPost = {
+          id:id,
+          // title: "수정 데이터 게시물",
+          body: "lololololololol",
+        };
+
+        // json으로 변환
+        const payload = JSON.stringify(newPost);
+
+        // 
+        xhr.setRequestHeader('content-type','application/json');
+        
+        
+        //요청 송신 : 데이터를 실어보냄
+        xhr.send(payload);
+      };
+
+      document.getElementById('btn').addEventListener('click',fetchPost);
+    </script>
+  </body>
+</html>
