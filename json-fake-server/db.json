@@ -11,20 +11,20 @@
       "id": 2
     },
     {
-      "title": "1231231",
-      "body": "ㅂㅈㄷㅂㅈㄷㅂㅈㄷㅂ",
+      "title": "졸려",
+      "body": "졸려졸려졸려졸려",
       "id": 3
     }
   ],
-  "users":[
+  "users": [
     {
-      "id" :1,
-      "userName":"김철수"
+      "id": 1,
+      "userName": "김철수"
     },
     {
-      "id" :2,
-      "userName":"뽀로로"
+      "id": 2,
+      "userName": "뽀로로"
     }
   ],
-  "followers" : []
+  "followers": []
 }
