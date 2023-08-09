@@ -42,6 +42,7 @@ const renderTodos = (todoList) => {
 
 // =========== 이벤트 관련 함수 =========== //
 
+
 // 생성 버튼 클릭 이벤트
 const addTondoHandler = e =>{
   // 1. 클릭 확인
@@ -67,9 +68,11 @@ const addTondoHandler = e =>{
   })
 };
 
+
 // 삭제버튼 클릭 이벤트
 const deleteTodoHandler = e => {
   if (!e.target.matches('.remove span')) return;
+  if(!confirm('삭제 하시겠습니까')) return;
   // 클릭한 할 일을 지우기 위해 id값을 가져와야 함
   // console.log( (1)e.target (2).closest('.todo-list-item')(3).dataset.id);
   const id = e.target.closest('.todo-list-item').dataset.id;
@@ -81,23 +84,32 @@ const deleteTodoHandler = e => {
     }else{
       console.log('삭제 실패');
     }
-  })
-
+  });
 }
 
 
+// 체크박스 체크 이벤트
+const checkTodoHandler = e =>{
+  // console.log('체크박스',e.target);
+  // 1. 서버의 수정요청을 보내서 done 값을 반대값으로 수정
+  console.log(e.target.checked); //checked는 현재 상태를 표시
+  const id = e.target.closest('.todo-list-item').dataset.id;
+  fetchTodos(`${URL}/${id}`,'PATCH',{done : e.target.checked}) ;
+};
 
 
 
 // step2. 할 일 추가 기능 만들기
-
 const $addBtn = document.getElementById('add');
 $addBtn.addEventListener('click',addTondoHandler)
 
 
 // step3. 할 일 삭제 기능 만들기
-
 $todoList.addEventListener('click',deleteTodoHandler);
+
+// step4. 할 일 완료 체크 처리
+$todoList.addEventListener('change',checkTodoHandler);
+// change로 설정하면 상태가 바뀔 때만 이벤트가 발생한다
 
 
 
