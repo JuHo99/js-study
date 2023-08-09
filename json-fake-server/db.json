@@ -35,8 +35,8 @@
     },
     {
       "id": 2,
-      "text": "뉴스 기사 보기",
-      "done": true
+      "text": "운동가기",
+      "done": false
     },
     {
       "id": 3,
