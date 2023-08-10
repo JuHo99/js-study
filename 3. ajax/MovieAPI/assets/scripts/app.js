@@ -67,6 +67,16 @@ const renderTodos = (todoList) => {
 
 
 // 생성 버튼 클릭 이벤트
+const insertTodo = async function (payload) {
+  const res = await fetchTodos(URL, 'POST', payload)
+  if (res.status === 200 || res.status === 201) {
+    console.log('등록 성공');
+  } else {
+    console.log('등록 실패');
+  }
+}
+
+
 const addTodoMouseHandler = e => {
   // 1. 클릭 확인
   // console.log('클릭');
@@ -91,14 +101,9 @@ const addTodoMouseHandler = e => {
     return;
   }
 
-  fetchTodos(URL, 'POST', payload)
-    .then(res => {
-      if (res.status === 200 || res.status === 201) {
-        console.log('등록 성공');
-      } else {
-        console.log('등록 실패');
-      }
-    })
+  insertTodo(payload);
+
+
 };
 
 // 생성 엔터 이벤트
@@ -123,17 +128,17 @@ const addTodoKeyHandler = e => {
     return;
   }
 
-  fetchTodos(URL, 'POST', payload)
-    .then(res => {
-      if (res.status === 200 || res.status === 201) {
-        console.log('등록 성공');
-      } else {
-        console.log('등록 실패');
-      }
-    })
+  insertTodo(payload);
 };
 
-
+const removeTodo = async (id) => {
+  const res = await fetchTodos(`${URL}/${id}`, 'DELETE')
+  if (res.status === 200) {
+    console.log('삭제 성공');
+  } else {
+    console.log('삭제 실패');
+  }
+}
 
 // 삭제버튼 클릭 이벤트
 const deleteTodoHandler = e => {
@@ -143,14 +148,7 @@ const deleteTodoHandler = e => {
   // console.log( (1)e.target (2).closest('.todo-list-item')(3).dataset.id);
   const id = e.target.closest('.todo-list-item').dataset.id;
   // console.log(id);
-  fetchTodos(`${URL}/${id}`, 'DELETE')
-    .then(res => {
-      if (res.status === 200) {
-        console.log('삭제 성공');
-      } else {
-        console.log('삭제 실패');
-      }
-    });
+  removeTodo(id);
 }
 
 
@@ -160,6 +158,7 @@ const checkTodoHandler = e => {
   // 1. 서버의 수정요청을 보내서 done 값을 반대값으로 수정
   console.log(e.target.checked); //checked는 현재 상태를 표시
   const id = e.target.closest('.todo-list-item').dataset.id;
+
   fetchTodos(`${URL}/${id}`, 'PATCH', { done: e.target.checked });
 };
 

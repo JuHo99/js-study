@@ -37,21 +37,6 @@
       "text": "자고싶다",
       "done": true,
       "id": 2
-    },
-    {
-      "text": "3",
-      "done": true,
-      "id": 3
-    },
-    {
-      "text": "123",
-      "done": false,
-      "id": 4
-    },
-    {
-      "text": "1",
-      "done": false,
-      "id": 5
     }
   ]
 }
