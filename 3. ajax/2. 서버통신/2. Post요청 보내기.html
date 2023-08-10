@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <pre></pre>
+    <button id="btn">등록</button>
+
+    <script>
+      const fetchPost = () => {
+        console.log('click');
+        // 서버에 등록 요청(POST) 
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", "http://localhost:5000/posts");
+
+        // 서버로 보낼 데이터(payrode)
+        const newPost = {
+          title: "새로운 데이터 게시물",
+          body: "wwwwwwwwwwwwwwwwwwwwwwwwww",
+        };
+
+        // json으로 변환
+        const payload = JSON.stringify(newPost);
+
+        // 
+        xhr.setRequestHeader('content-type','application/json');
+        
+        
+        //요청 송신 : 데이터를 실어보냄
+        xhr.send(payload);
+      };
+
+      document.getElementById('btn').addEventListener('click',fetchPost);
+    </script>
+  </body>
+</html>
