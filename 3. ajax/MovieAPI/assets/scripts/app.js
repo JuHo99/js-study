@@ -16,8 +16,27 @@ const fetchTodos = (url, method = 'GET', payload = null) => {
   return fetch(url, requestInit);
 };
 
+const renderRestTodo = todoList => {
+  // 총 할 일 개수
+  const totalTodos = todoList.length;
+  // 완료된 할 일의 개수
+  const restTodos = todoList.filter(todo => todo.done).length;
+
+  // 렌더링 처리
+  const $rest = document.querySelector('.rest-todo');
+  if (totalTodos > 0) {
+    $rest.textContent = `( ${restTodos} / ${totalTodos} )`;
+  }
+};
+
+
+
 // 화면에 todos를 렌더링하는 함수
 const renderTodos = (todoList) => {
+
+  // 할 일 완료 갯수 렌더링
+  renderRestTodo(todoList);
+
   // li태그의 템플릿을 가져옴
   const $liTemplate = document.getElementById('single-todo');
 
@@ -35,8 +54,12 @@ const renderTodos = (todoList) => {
     done && $checkbox.parentNode.classList.add('checked');
 
     $todoList.appendChild($newLi);
+
   });
 };
+
+
+
 
 
 
@@ -44,7 +67,7 @@ const renderTodos = (todoList) => {
 
 
 // 생성 버튼 클릭 이벤트
-const addTondoHandler = e => {
+const addTodoMouseHandler = e => {
   // 1. 클릭 확인
   // console.log('클릭');
   // 2.클릭시 인풋 텍스트 읽기
@@ -58,6 +81,16 @@ const addTondoHandler = e => {
     done: false
     // id는 자동생성
   }
+
+  // inputText를 입력하지 않았을 때 
+  if (inputText.trim() === '') {
+    // alert('텍스트를 입력하세요');
+    $textInput.style.background = 'red';
+    // $textInput.value = '공백을 입력하지 마세요';
+    $textInput.setAttribute('placeholder', '공백은 허용되지 않습니다')
+    return;
+  }
+
   fetchTodos(URL, 'POST', payload)
     .then(res => {
       if (res.status === 200 || res.status === 201) {
@@ -67,6 +100,39 @@ const addTondoHandler = e => {
       }
     })
 };
+
+// 생성 엔터 이벤트
+const addTodoKeyHandler = e => {
+
+  if (e.key !== 'Enter') return
+  const $textInput = document.getElementById('todo-text');
+  console.log($textInput);
+  const inputText = $textInput.value;
+  const payload = {
+    text: inputText,
+    done: false
+  }
+
+  // inputText를 입력하지 않았을 때 
+  if (inputText.trim() === '') {
+    // alert('텍스트를 입력하세요');
+    e.preventDefault();
+    $textInput.style.background = 'red';
+    // $textInput.value = '공백을 입력하지 마세요';
+    $textInput.setAttribute('placeholder', '공백은 허용되지 않습니다')
+    return;
+  }
+
+  fetchTodos(URL, 'POST', payload)
+    .then(res => {
+      if (res.status === 200 || res.status === 201) {
+        console.log('등록 성공');
+      } else {
+        console.log('등록 실패');
+      }
+    })
+};
+
 
 
 // 삭제버튼 클릭 이벤트
@@ -148,7 +214,7 @@ modifyTextTodoHandler = e => {
  */
 
 // 수정 이벤트
-const enterModifyMode = ($undo)=>{
+const enterModifyMode = ($undo) => {
   // 아이콘 변경 
   $undo.classList.replace("lnr-undo", "lnr-checkmark-circle")
 
@@ -159,33 +225,33 @@ const enterModifyMode = ($undo)=>{
   //  -- input을 생성
   const $modInput = document.createElement('input');
   $modInput.classList.add('modify-input');
-  $modInput.setAttribute('type','text');
-  $modInput.value= $textSpan.textContent;
+  $modInput.setAttribute('type', 'text');
+  $modInput.value = $textSpan.textContent;
   //  -- span을 생성한 input으로 교체
   const $label = $textSpan.parentNode;
-  $label.replaceChild($modInput,$textSpan);
+  $label.replaceChild($modInput, $textSpan);
 
 };
 
-const modifyTodo = ($checkMark) =>{
+const modifyTodo = ($checkMark) => {
   const $li = $checkMark.closest('.todo-list-item');
   const id = $li.dataset.id;
   const newText = $li.querySelector('.modify-input').value;
 
-  fetchTodos(`${URL}/${id}`,'PATCH',{
-    text:newText
+  fetchTodos(`${URL}/${id}`, 'PATCH', {
+    text: newText
   })
 
 }
 
 
 
-const modifyTodoHandler = e =>{
+const modifyTodoHandler = e => {
   if (e.target.matches('.modify span.lnr-undo')) {
     enterModifyMode(e.target); // 수정 모드
-  }else if (e.target.matches('.modify span.lnr-checkmark-circle')) {
+  } else if (e.target.matches('.modify span.lnr-checkmark-circle')) {
     modifyTodo(e.target); // 서버에 수정 요청
-  }else{
+  } else {
     return;
   }
 };
@@ -193,10 +259,11 @@ const modifyTodoHandler = e =>{
 
 
 
-
 // step2. 할 일 추가 기능 만들기
 const $addBtn = document.getElementById('add');
-$addBtn.addEventListener('click', addTondoHandler)
+$addBtn.addEventListener('click', addTodoMouseHandler)
+const $addText = document.getElementById('todo-text');
+$addText.addEventListener('keydown', addTodoKeyHandler)
 
 
 // step3. 할 일 삭제 기능 만들기
@@ -208,7 +275,7 @@ $todoList.addEventListener('change', checkTodoHandler);
 
 // step5. 할 일 수정 기능 만들기
 
-$todoList.addEventListener('click',modifyTodoHandler);
+$todoList.addEventListener('click', modifyTodoHandler);
 
 /*
 // ========================= 내 코드
@@ -217,6 +284,10 @@ $todoList.addEventListener('click', changeTextTodoHandler);
 // span을 input으로 바꿔주는 핸들러 
 $todoList.addEventListener('click', modifyTextTodoHandler);
 */
+
+
+
+
 
 
 

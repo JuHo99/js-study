@@ -29,19 +29,29 @@
   "followers": [],
   "todos": [
     {
-      "id": 1,
-      "text": "저녁 준비하기",
-      "done": false
+      "text": "1",
+      "done": false,
+      "id": 1
     },
     {
-      "id": 2,
-      "text": "운동가기",
-      "done": false
+      "text": "자고싶다",
+      "done": true,
+      "id": 2
     },
     {
-      "id": 3,
-      "text": "자바 스크립트 공부하기",
-      "done": false
+      "text": "3",
+      "done": true,
+      "id": 3
+    },
+    {
+      "text": "123",
+      "done": false,
+      "id": 4
+    },
+    {
+      "text": "1",
+      "done": false,
+      "id": 5
     }
   ]
 }
