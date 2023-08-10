@@ -3,13 +3,12 @@
         "browser": true,
         "es2021": true
     },
-    "extends": "google",
+    "extends": "",
     "parserOptions": {
         "ecmaVersion": "latest",
         "sourceType": "module"
     },
     "rules": {
-        "object-curly-spacing":"off"
         
     }
 }
